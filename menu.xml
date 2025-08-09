@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<module> 
+  <menulist> 
+    <menuitem menuid="voipiran" desc="Rayan"
+              parent="" module="no" link="" order="21"> 
+      <permissions> 
+        <group id="1" name="administrator" desc="total access"></group> 
+      </permissions> 
+    </menuitem> 
+
+    <menuitem menuid="survey" desc="Queue Survey"
+              parent="voipiran" module="no" link="Rayan_voip/login.php" order="61"> 
+      <permissions> 
+        <group id="1" name="administrator" desc="total access"></group> 
+      </permissions> 
+    </menuitem> 
+  </menulist> 
+</module>
