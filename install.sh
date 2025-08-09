@@ -74,9 +74,11 @@ echo "Add dialplan code to extensions_custom.conf"
 echo "-------------Extension Custom----------------"
 sed -i '/\[from\-internal\-custom\]/a include \=\> survey' /etc/asterisk/extensions_custom.conf
 echo "" >> /etc/asterisk/extensions_custom.conf
-echo "[survey]" >> /etc/asterisk/extensions_custom.conf
-echo "exten => 4455,1,Set(__AGENT=${CONNECTEDLINE(num)})" >> /etc/asterisk/extensions_custom.conf
-echo "exten => 4455,2,AGI(survey.php,${QUEUENUM})" >> /etc/asterisk/extensions_custom.conf
+cat <<'EOF' >> /etc/asterisk/extensions_custom.conf
+[survey]
+exten => 4455,1,Set(__AGENT=\${CONNECTEDLINE(num)})
+exten => 4455,2,AGI(survey.php,\${QUEUENUM})
+EOF
 echo "Dialplans have Set Sucsessfully"
 sleep 1
 
