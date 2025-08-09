@@ -9,6 +9,16 @@ $db_host = '127.0.0.1';
 $db_user = 'root';
 $db_password = '123';
 
+
+$dbFile = '/var/www/html/Rayan_voip/db.php';
+
+if (file_exists($dbFile)) {
+    require $dbFile;
+} else {
+    die("فایل بانک اطلاعاتی پیدا نشد: " . $dbFile);
+}
+
+
 /* Caller Info */
 $calleridNumber = $agi->get_variable("CALLERID(num)"); $calleridNumber = $calleridNumber['data'];
 $calleridName = $agi->get_variable("CALLERID(name)"); $calleridName = $calleridName['data'];
@@ -22,8 +32,8 @@ $surveyLocation = isset($argv[1]) ? $argv[1] : '';
 $agi->Verbose('QUEUE NUMBER: ' . $surveyLocation);
 
 /* Connect to DB */
-$con = mysql_connect($db_host, $db_user, $db_password);
-if (!$con) {
+$mysqli = mysql_connect($db_host, $db_user, $rootpw);
+if (!$mysqli) {
     $agi->Verbose('DB NOT CONNECTED');
     $agi->stream_file('custom/goodbye');
     die();
