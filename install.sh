@@ -14,7 +14,7 @@ echo "------------Create DB-----------------"
 rootpw=$(sed -ne 's/.*mysqlrootpwd=//gp' /etc/issabel.conf)
 
 
-#mysql -uroot -p$rootpw visurvey < Rayandb.sql
+#mysql -uroot -p$rootpw asterisk gi< Rayandb.sql
 echo "DataBase Created Sucsessfully"
 sleep 1
 
