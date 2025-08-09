@@ -1,4 +1,3 @@
-
 USE `asterisk`;
 
 -- جدول تنظیمات نظرسنجی
@@ -55,5 +54,4 @@ CREATE TABLE IF NOT EXISTS `license` (
   `license_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
