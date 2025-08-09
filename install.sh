@@ -76,8 +76,8 @@ sed -i '/\[from\-internal\-custom\]/a include \=\> survey' /etc/asterisk/extensi
 echo "" >> /etc/asterisk/extensions_custom.conf
 cat <<'EOF' >> /etc/asterisk/extensions_custom.conf
 [survey]
-exten => 4455,1,Set(__AGENT=\${CONNECTEDLINE(num)})
-exten => 4455,2,AGI(survey.php,\${QUEUENUM})
+exten => 4455,1,Set(__AGENT=${CONNECTEDLINE(num)})
+exten => 4455,2,AGI(survey.php,${QUEUENUM})
 EOF
 echo "Dialplans have Set Sucsessfully"
 sleep 1
