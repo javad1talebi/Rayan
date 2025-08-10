@@ -92,33 +92,6 @@ issabel-menumerge menu.xml
 echo "Issabel Menu is Created Sucsessfully"
 sleep 1
 
-echo "-------------Add Apache Alias for Sounds----------------"
-cat <<'EOF' >> /etc/httpd/conf/httpd.conf
 
-# Rayan Survey Sounds Alias
-Alias /sounds /var/lib/asterisk/sounds
-<Directory /var/lib/asterisk/sounds>
-    Options Indexes FollowSymLinks
-    AllowOverride All
-    Require all granted
-</Directory>
-EOF
-echo "Apache Alias Added Sucsessfully"
-sleep 1
-
-echo "-------------Apache Restart----------------"
-service httpd restart
-echo "Apache has Restarted Sucsessfully"
-sleep 1
-
-echo "-------------Reload Asterisk Dialplan----------------"
-asterisk -rx "dialplan reload"
-echo "Dialplan Reloaded Successfully"
-sleep 1
-
-echo "-------------Reload AMPortal----------------"
-amportal a reload
-echo "AMPortal Reloaded Successfully"
-sleep 1
 
 echo "-----------FINISHED (Rayan)-----------"
