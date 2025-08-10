@@ -92,6 +92,20 @@ issabel-menumerge menu.xml
 echo "Issabel Menu is Created Sucsessfully"
 sleep 1
 
+echo "-------------Add Apache Alias for Sounds----------------"
+cat <<'EOF' >> /etc/httpd/conf/httpd.conf
+
+# Rayan Survey Sounds Alias
+Alias /sounds /var/lib/asterisk/sounds
+<Directory /var/lib/asterisk/sounds>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+EOF
+echo "Apache Alias Added Sucsessfully"
+sleep 1
+
 echo "-------------Apache Restart----------------"
 service httpd restart
 echo "Apache has Restarted Sucsessfully"
