@@ -116,4 +116,9 @@ asterisk -rx "dialplan reload"
 echo "Dialplan Reloaded Successfully"
 sleep 1
 
+echo "-------------Reload AMPortal----------------"
+amportal a reload
+echo "AMPortal Reloaded Successfully"
+sleep 1
+
 echo "-----------FINISHED (Rayan)-----------"
