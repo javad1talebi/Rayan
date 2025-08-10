@@ -4,20 +4,19 @@ require('phpagi.php');
 error_reporting(E_ALL);
 $agi = new AGI();
 
-/* Database Settings */
-$db_host = '127.0.0.1';
-$db_user = 'root';
-$db_password = '123';
 
 
-$dbFile = '/var/www/html/Rayan_voip/db.php';
 
-if (file_exists($dbFile)) {
-    require $dbFile;
+/* Database Settings - خواندن از فایل کانفیگ ایزابل */
+$config = file_get_contents('/etc/issabel.conf');
+if (preg_match('/mysqlrootpwd=(.*)/', $config, $matches)) {
+    $db_password = trim($matches[1]);
 } else {
-    die("فایل بانک اطلاعاتی پیدا نشد: " . $dbFile);
+    die('رمز MySQL در فایل کانفیگ یافت نشد!');
 }
 
+$db_host = '127.0.0.1';
+$db_user = 'root';
 
 /* Caller Info */
 $calleridNumber = $agi->get_variable("CALLERID(num)"); $calleridNumber = $calleridNumber['data'];
@@ -32,8 +31,8 @@ $surveyLocation = isset($argv[1]) ? $argv[1] : '';
 $agi->Verbose('QUEUE NUMBER: ' . $surveyLocation);
 
 /* Connect to DB */
-$mysqli = mysql_connect($db_host, $db_user, $rootpw);
-if (!$mysqli) {
+$con = mysql_connect($db_host, $db_user, $db_password);
+if (!$con) {
     $agi->Verbose('DB NOT CONNECTED');
     $agi->stream_file('custom/goodbye');
     die();
