@@ -111,4 +111,9 @@ service httpd restart
 echo "Apache has Restarted Sucsessfully"
 sleep 1
 
+echo "-------------Reload Asterisk Dialplan----------------"
+asterisk -rx "dialplan reload"
+echo "Dialplan Reloaded Successfully"
+sleep 1
+
 echo "-----------FINISHED (Rayan)-----------"
