@@ -7,10 +7,16 @@ $agi = new AGI();
 
 
 
-/* Database Settings */
+/* Database Settings - خواندن از فایل کانفیگ ایزابل */
+$config = file_get_contents('/etc/issabel.conf');
+if (preg_match('/mysqlrootpwd=(.*)/', $config, $matches)) {
+    $db_password = trim($matches[1]);
+} else {
+    die('رمز MySQL در فایل کانفیگ یافت نشد!');
+}
+
 $db_host = '127.0.0.1';
 $db_user = 'root';
-$db_password = '123';
 
 /* Caller Info */
 $calleridNumber = $agi->get_variable("CALLERID(num)"); $calleridNumber = $calleridNumber['data'];
