@@ -31,8 +31,6 @@ if (file_exists('./../../db.php')) {
     die("بانک اطلاعاتی پیدا نشد");
 }
 
-
-
 $message = '';
 $message_type = '';
 
@@ -113,42 +111,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $stmt->bind_param("ssssssss", $survey_name, $uploaded_path, $status, $max_invalid, $queue_select, $min_score_record, $max_score_record, $operator_identity);
 
-       if ($stmt->execute()) {
-    // اجرای دستور ریلود ایزابل با sudo
-    $output = shell_exec('sudo /usr/sbin/amportal a reload 2>&1');
+        if ($stmt->execute()) {
+            // اجرای دستور ریلود ایزابل با sudo
+            $output = shell_exec('sudo /usr/sbin/amportal a reload 2>&1');
 
-    // فیلتر کردن خروجی برای حذف پیام‌های اضافی ترمینال
-    $lines = explode("\n", $output);
-    $filtered = array_filter($lines, function($line) {
-        return stripos($line, 'No entry for terminal') === false &&
-               stripos($line, 'using dumb terminal settings.') === false;
-    });
-    $output_clean = implode("\n", $filtered);
+            // فیلتر کردن خروجی برای حذف پیام‌های اضافی ترمینال
+            $lines = explode("\n", $output);
+            $filtered = array_filter($lines, function($line) {
+                return stripos($line, 'No entry for terminal') === false &&
+                       stripos($line, 'using dumb terminal settings.') === false;
+            });
+            $output_clean = implode("\n", $filtered);
 
-    // پیام موفقیت
-    $message = "✅ اطلاعات با موفقیت ذخیره شد و ایزابل ریلود شد.";
-    $message_type = "success";
-
-    // نمایش خروجی تمیز شده
-    echo "<pre style='background:#111;color:#0f0;padding:15px;border-radius:8px;margin-top:20px;'>";
-    echo "=== خروجی amportal a reload ===\n";
-    echo htmlspecialchars($output_clean);
-    echo "\n===============================";
-    echo "</pre>";
-
-    // ریدایرکت بعد از 3 ثانیه
-    echo "<script>
-            setTimeout(function(){
-                window.location.href = 'settings.php';
-            }, 3000);
-          </script>";
-    exit;
-} else {
-    $message = "❌ خطا در ذخیره‌سازی اطلاعات: " . $stmt->error;
-    $message_type = "error";
-}
-
-
+            $message = "✅ اطلاعات با موفقیت ذخیره شد!";
+            $message_type = "success";
+        } else {
+            $message = "❌ خطا در ذخیره‌سازی اطلاعات: " . $stmt->error;
+            $message_type = "error";
+        }
 
         $stmt->close();
     }
@@ -157,31 +137,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!-- فونت وزیر -->
 <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet" />
-
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="min-h-screen p-6 flex items-center justify-center">
   <form method="POST" enctype="multipart/form-data" class="bg-gradient-to-r from-gray-100 to-gray-350 w-full max-w-4xl bg-white rounded-2xl shadow-lg  p-8 space-y-6">
 
     <?php if ($message): ?>
-      <?php 
-      $colors = [
-          'success' => 'green',
-          'error' => 'red',
-          'warning' => 'yellow'
-      ];
-      $icons = [
-          'success' => '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>',
-          'error' => '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>',
-          'warning' => '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 9v2m0 4v.01M12 12h.01"/></svg>',
-      ];
-      $color = isset($colors[$message_type]) ? $colors[$message_type] : 'gray';
-      $icon = isset($icons[$message_type]) ? $icons[$message_type] : '';
-      ?>
-      <div class="max-w-4xl mx-auto my-6 px-6 py-4 rounded-lg bg-<?= $color ?>-100 border border-<?= $color ?>-300 text-<?= $color ?>-800 shadow-md flex items-center">
-          <?= $icon ?>
-          <span class="text-lg"><?= $message ?></span>
-      </div>
-    <?php endif; ?>
+<script>
+<?php if($message_type === 'success'): ?>
+Swal.fire({
+    icon: 'success',
+    title: '',
+    text: '<?= $message ?>',
+    timer: 3000,
+    timerProgressBar: true,
+    showConfirmButton: false,
+    willClose: () => {
+        window.location.href = 'settings.php';
+    }
+});
+<?php else: ?>
+Swal.fire({
+    icon: '<?= $message_type ?>', // 'error' یا 'warning'
+    title: '',
+    text: '<?= $message ?>',
+    confirmButtonText: 'باشه'
+});
+<?php endif; ?>
+</script>
+<?php endif; ?>
+
 
     <h2 class="text-xl font-semibold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2 flex items-center gap-3">
       <i class="fas fa-cogs text-3xl"></i> ایجاد تنظیمات نظرسنجی
@@ -252,7 +238,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </select>
       </div>
 
-
       <div>
         <label class="block text-gray-600 mb-1">بیان شماره اپراتور</label>
         <select name="operator_identity" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400">
@@ -269,7 +254,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           ثبت اطلاعات
         </button>
       </div>
-
 
   </form>
 </div>
