@@ -10,9 +10,8 @@ echo "------------Create DB-----------------"
 #echo -n "Enter the MySQL root password: "
 #read rootpw
 
-###Fetch DB root PASSWORD
+### Fetch DB root PASSWORD
 rootpw=$(sed -ne 's/.*mysqlrootpwd=//gp' /etc/issabel.conf)
-
 
 mysql -uroot -p$rootpw asterisk < Rayandb.sql
 echo "DataBase Created Sucsessfully"
@@ -26,8 +25,6 @@ echo "------------Create complaints Folders-----------------"
 mkdir -p /var/lib/asterisk/sounds/complaints
 chmod -R 777 /var/lib/asterisk/sounds/complaints
 chown asterisk:asterisk /var/lib/asterisk/sounds/complaints
-
-
 
 echo "Copy Survey Folder and Set Permissions"
 echo "------------Copy Files-----------------"
@@ -45,7 +42,6 @@ echo "Copy Uploads Folder"
 yes | cp uploads/* /var/lib/asterisk/sounds/custom/ > /dev/null
 echo "Voice files copied successfully"
 
-
 echo "Copy survey.php and Set Permissions"
 echo "-------------Copy Files----------------"
 yes | cp -rf survey.php /var/lib/asterisk/agi-bin
@@ -56,7 +52,6 @@ yes | cp -rf PlayAgentInfo.php /var/lib/asterisk/agi-bin
 chmod 777 /var/lib/asterisk/agi-bin/PlayAgentInfo.php
 chown asterisk:asterisk /var/lib/asterisk/agi-bin/PlayAgentInfo.php
 
-
 yes | cp -rf say.conf /etc/asterisk
 chmod 777 /etc/asterisk/say.conf
 chown asterisk:asterisk /etc/asterisk/say.conf
@@ -65,10 +60,8 @@ yes | cp -rf -avr pr/ /var/lib/asterisk/sounds > /dev/null
 chmod -R 777 /var/lib/asterisk/sounds/pr
 chown -R asterisk:asterisk /var/lib/asterisk/sounds/pr
 
-
 echo "Asterisk Files have Moved Sucsessfully"
 sleep 1
-
 
 echo "Add dialplan code to extensions_custom.conf"
 echo "-------------Extension Custom----------------"
@@ -116,8 +109,17 @@ asterisk -rx "dialplan reload"
 echo "Dialplan Reloaded Successfully"
 sleep 1
 
+echo "-------------Add sudoers rule for asterisk----------------"
+if ! grep -q "/usr/sbin/amportal" /etc/sudoers; then
+    echo "asterisk ALL=(ALL) NOPASSWD: /usr/sbin/amportal" | EDITOR='tee -a' visudo > /dev/null
+    echo "Sudoers rule added for asterisk."
+else
+    echo "Sudoers rule already exists."
+fi
+sleep 1
+
 echo "-------------Reload AMPortal----------------"
-amportal a reload
+sudo /usr/sbin/amportal a reload
 echo "AMPortal Reloaded Successfully"
 sleep 1
 
