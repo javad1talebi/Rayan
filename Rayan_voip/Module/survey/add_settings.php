@@ -150,7 +150,7 @@ Swal.fire({
     icon: 'success',
     title: '',
     text: '<?= $message ?>',
-    timer: 3000,
+    timer: 1000,
     timerProgressBar: true,
     showConfirmButton: false,
     willClose: () => {
@@ -231,11 +231,12 @@ Swal.fire({
       <div>
         <label class="block text-gray-600 mb-1">سقف امتیاز برای ضبط پیام مشتری</label>
         <select name="max_score_record" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400">
-          <option value="0">غیرفعال</option>
+          <option value="0" selected>غیرفعال</option>
           <option value="3">3</option>
           <option value="4">4</option>
-          <option value="5" selected>5</option>
+          <option value="5">5</option>
         </select>
+
       </div>
 
       <div>
